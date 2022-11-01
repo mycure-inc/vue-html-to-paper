@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+  <script src="./build/vue-html-to-paper.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/kidlat-css/css/kidlat.css">
+  <link rel="stylesheet" href="./landscape.css">
+  <title>Vue Html To Paper - Vue mixin for html elements printing.</title>
+</head>
+<body>
+  <div id="app">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">VueHtmlToPaper</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="https://github.com/mycure-inc/vue-html-to-paper">GitHub</span></a>
+        </li>
+      </ul>
+    </nav>
+    <div class="container">
+      <div id="printMe" class="row">
+        <div class="col-xs-12 col-md-10 offset-md-1 pt-5">
+          <h1 align="center">MYCURE Pets</h1>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Broker</th>
+                  <th>Name</th>
+                  <th>Trade Exp Lvl 0-100</th>
+                  <th>Sound</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Broker1</td>
+                  <td>Jürgen</td>
+                  <td>97</td>
+                  <td>APPL!!!</td>
+                </tr>
+                <tr>
+                  <td>Broker2</td>
+                  <td>Karl</td>
+                  <td>80</td>
+                  <td>TSLA!!!</td>
+                </tr>
+                <tr>
+                  <td>Broker2</td>
+                  <td>Stefan</td>
+                  <td>79</td>
+                  <td>MSFT!!! *high pitch*</td>
+                </tr>
+                <tr>
+                  <td>Broker3</td>
+                  <td>Walter</td>
+                  <td>90</td>
+                  <td>GOOG!!! *high pitch*</td>
+                </tr>
+                <tr>
+                  <td>Broker4</td>
+                  <td>Uwe</td>
+                  <td>40</td>
+                  <td><a href="https://coindataflow.com/de/aktie/SLI">lithium aktie</a>!!! *high pitch x3*</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Default Global Options</h4>
+          <pre>{{globalOptions}}</pre>
+          <button class="btn btn-outline-primary" @click="print">PRINT PORTRAIT</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>With Custom CSS</h4>
+          <p>With custom local css to override the global options. This will print the table on landscape mode.</p>
+          <pre>{{localLandScapeOptions}}</pre>
+          <button class="btn btn-outline-primary" @click="printLandscape">PRINT LANDSCAPE</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Remove styles</h4>
+          <button class="btn btn-outline-primary" @click="printNoStyles">PRINT NO STYLES</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Turn off automatic closing after print</h4>
+          <button class="btn btn-outline-primary" @click="printAutoCloseOff">PRINT AUTO CLOSE OFF</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Custom window title</h4>
+          <p>For customizing the file name.</p>
+          <button class="btn btn-outline-primary" @click="printCustomWindowTitle">PRINT CUSTOM WINDOW TITLE</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Callback</h4>
+          <button class="btn btn-outline-primary" @click="printCallback">PRINT CALLBACK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const options = {
+      name: '_blank',
+      specs: [
+        'fullscreen=yes',
+        'titlebar=yes',
+        'scrollbars=yes'
+      ],
+      styles: [
+        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+        'https://unpkg.com/kidlat-css/css/kidlat.css',
+        './landscape.css'
+      ],
+    };
+
+    Vue.use(VueHtmlToPaper, options);
+
+    var vm = new Vue({
+      el: '#app',
+      data () {
+        return {
+          globalOptions: {
+            name: '_blank',
+            specs: [
+              'fullscreen=yes',
+              'titlebar=yes',
+              'scrollbars=yes'
+            ],
+            styles: [
+              'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+              'https://unpkg.com/kidlat-css/css/kidlat.css',
+              './landscape.css', // must be the path of your public folder
+            ],
+            timeout: 1000,
+            autoClose: true,
+            windowTitle: window.document.title, // whatever's the window title of the opener
+          },
+          localLandScapeOptions: {
+            styles: [
+              'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+              'https://unpkg.com/kidlat-css/css/kidlat.css',
+              './landscape.css', // must be the path of your public folder
+            ]
+          }
+        }
+      },
+      methods: {
+        async print () {
+          await vm.$htmlToPaper('printMe');
+          console.warn('done');
+        },
+        async printLandscape () {
+          const localOptions = {
+            styles: [
+              'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+              'https://unpkg.com/kidlat-css/css/kidlat.css',
+              './landscape.css'
+            ]
+          };
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done landscape');
+        },
+        async printNoStyles () {
+          const localOptions = {
+            styles: []
+          };
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done no styles');
+        },
+        async printAutoCloseOff () {
+          const localOptions = {
+            autoClose: false,
+          };
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done');
+        },
+        async printCustomWindowTitle () {
+          const localOptions = {
+            windowTitle: 'This is custom window title',
+          };
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done');
+        },
+        printCallback () {
+          vm.$htmlToPaper('printMe', null, () => {
+            console.warn('done callback');
+          });
+        },
+      },
+    });
+  </script>
+</body>
+</html>

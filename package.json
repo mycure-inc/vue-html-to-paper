@@ -1,0 +1,49 @@
+{
+  "name": "vue-html-to-paper",
+  "version": "1.4.4",
+  "description": "Vue mixin for printing html elements to paper.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --fix --ext .js --ignore-path .gitignore .",
+    "prebuild:webpack": "rm -rf dist",
+    "prebuild:rollup": "rm -rf build",
+    "build:webpack": "webpack --progress",
+    "build:rollup": "rollup -c",
+    "build:all": "npm run build:webpack && npm run build:rollup",
+    "build": "npm run build:rollup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mycure-inc/vue-html-to-paper.git"
+  },
+  "keywords": [
+    "html",
+    "printing",
+    "element",
+    "print html",
+    "print element"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.12",
+    "@babel/preset-env": "^7.14.1",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "compression-webpack-plugin": "^1.0.0",
+    "css-loader": "^0.28.4",
+    "eslint": "^7.25.0",
+    "rollup": "^2.47.0",
+    "style-loader": "^0.18.2",
+    "terser-webpack-plugin": "^5.1.1",
+    "uglify-loader": "^2.0.0",
+    "webpack-cli": "^4.6.0",
+    "webpack": "^5.36.2"
+  },
+  "author": "Jofferson Ramirez Tiquez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mycure-inc/vue-html-to-paper/issues"
+  },
+  "homepage": "https://github.com/mycure-inc/vue-html-to-paper#readme"
+}
