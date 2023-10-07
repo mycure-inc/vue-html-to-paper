@@ -1,11 +1,11 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.VueHtmlToPaper = factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.VueHtmlToPaper = {}));
+})(this, (function (exports) { 'use strict';
 
   function addStyles (win, styles) {
-    styles.forEach(style => {
+    styles.forEach((style) => {
       let link = win.document.createElement('link');
       link.setAttribute('rel', 'stylesheet');
       link.setAttribute('type', 'text/css');
@@ -23,12 +23,12 @@
     windowRef.focus();
     return windowRef;
   }
-    
+
   const VueHtmlToPaper = {
-    install (Vue, options = {}) {
-      Vue.prototype.$htmlToPaper = (el, localOptions, cb = () => true) => {
-        let defaultName = '_blank', 
-          defaultSpecs = ['fullscreen=yes','titlebar=yes', 'scrollbars=yes'],
+    install (app, options = {}) {
+      const htmlToPaper = (el, localOptions, cb = () => true) => {
+        let defaultName = '_blank',
+          defaultSpecs = ['fullscreen=yes', 'titlebar=yes', 'scrollbars=yes'],
           defaultReplace = true,
           defaultStyles = [];
         let {
@@ -55,7 +55,7 @@
           alert(`Element to print #${el} not found!`);
           return;
         }
-        
+
         const url = '';
         const win = openWindow(url, name, specs);
 
@@ -71,20 +71,33 @@
       `);
 
         addStyles(win, styles);
-        
+
         setTimeout(() => {
           win.document.close();
           win.focus();
           win.print();
-          setTimeout(function () {window.close();}, 1);
+          setTimeout(function () {
+            window.close();
+          }, 1);
           cb();
         }, 1000);
-          
+
         return true;
       };
+
+      if (app.prototype) {
+        app.prototype.$htmlToPaper = htmlToPaper;
+      } else {
+        app.provide('htmlToPaper', htmlToPaper);
+
+        app.config.globalProperties.$htmlToPaper = htmlToPaper;
+
+      }
     },
   };
 
-  return VueHtmlToPaper;
+  exports.VueHtmlToPaper = VueHtmlToPaper;
 
-})));
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));

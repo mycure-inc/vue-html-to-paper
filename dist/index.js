@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function addStyles (win, styles) {
-  styles.forEach(style => {
+  styles.forEach((style) => {
     let link = win.document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
@@ -21,12 +21,12 @@ function openWindow (url, name, props) {
   windowRef.focus();
   return windowRef;
 }
-  
+
 const VueHtmlToPaper = {
-  install (Vue, options = {}) {
-    Vue.prototype.$htmlToPaper = (el, localOptions, cb = () => true) => {
-      let defaultName = '_blank', 
-        defaultSpecs = ['fullscreen=yes','titlebar=yes', 'scrollbars=yes'],
+  install (app, options = {}) {
+    const htmlToPaper = (el, localOptions, cb = () => true) => {
+      let defaultName = '_blank',
+        defaultSpecs = ['fullscreen=yes', 'titlebar=yes', 'scrollbars=yes'],
         defaultReplace = true,
         defaultStyles = [];
       let {
@@ -53,7 +53,7 @@ const VueHtmlToPaper = {
         alert(`Element to print #${el} not found!`);
         return;
       }
-      
+
       const url = '';
       const win = openWindow(url, name, specs);
 
@@ -69,18 +69,29 @@ const VueHtmlToPaper = {
       `);
 
       addStyles(win, styles);
-      
+
       setTimeout(() => {
         win.document.close();
         win.focus();
         win.print();
-        setTimeout(function () {window.close();}, 1);
+        setTimeout(function () {
+          window.close();
+        }, 1);
         cb();
       }, 1000);
-        
+
       return true;
     };
+
+    if (app.prototype) {
+      app.prototype.$htmlToPaper = htmlToPaper;
+    } else {
+      app.provide('htmlToPaper', htmlToPaper);
+
+      app.config.globalProperties.$htmlToPaper = htmlToPaper;
+
+    }
   },
 };
 
-exports.default = VueHtmlToPaper;
+exports.VueHtmlToPaper = VueHtmlToPaper;
